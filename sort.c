@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -47,16 +46,18 @@ void heapsort(int *a, int len)
 	}
 }
 
+/* Build a heap from an arbitrarily labelled tree a */
 void build_heap(int *a, int len)
 {
 	for (int v = len / 2 - 1; v >= 0; v--)
 		down_heap(v, a, len);
 }
 
+/* Make a semi-heap rooted at a[v] into a heap */
 void down_heap(int v, int *a, int len)
 {
 	while (v <= len / 2 - 1) {
-		int w;	/* Index of child node to swap with node at v */
+		int w;	/* Index of child node to swap with node at a[v] */
 
 		w = 2 * v + 1;
 		if (w + 1 < len && a[w + 1] > a[w])
@@ -101,6 +102,7 @@ int merge_sort(int *a, int alen)
 	return 0;
 }
 
+/* Merge b and c into a */
 void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 {
 	int i, j, k;
@@ -118,6 +120,7 @@ void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 	}
 }
 
+/* Swap a[i] and a[j] */
 void swap(int *a, int i, int j)
 {
 	int tmp;

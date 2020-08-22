@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#define CMD_MAX 50000		/* Maximum number of commands */
-#define DATA_SIZE 30000		/* Number of available data cells */
+enum {
+	CMD_MAX = 50000,	/* Maximum number of commands */
+	DATA_SIZE = 30000	/* Number of available data cells */
+};
 
 static const char valid_cmds[] = "><+-.,[]";	/* Valid brainfuck commands */
 
 /* Read and interpret brainfuck commands from a file */
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	FILE *fp;			/* File containing the program */
 
@@ -75,7 +77,7 @@ int main(int argc, char *argv[])
 	for (j = 0; j < DATA_SIZE; j++)
 		data[j] = 0;
 
-	/* Process commands */
+	/* Interpret commands */
 	di = 0;
 	for (ci = 0; ci < ncmd; ci++) {
 		switch (cmd[ci]) {
