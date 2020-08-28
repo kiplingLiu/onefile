@@ -10,6 +10,8 @@ void down_heap(int v, int *a, int len);
 int merge_sort(int *a, int alen);
 void merge(int *a, int alen, int *b, int blen, int *c, int clen);
 
+void quicksort(int *a, int len);
+
 void swap(int *a, int i, int j);
 
 /* A collection of sorting algorithms */
@@ -118,6 +120,22 @@ void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 		else
 			a[i] = c[k++];
 	}
+}
+
+void quicksort(int *a, int len)
+{
+	int i, last;
+
+	if (len <= 1)
+		return;
+	swap(a, 0, rand() % len);
+	last = 0;
+	for (i = 1; i < len; i++)
+		if (a[i] < a[0])
+			swap(a, ++last, i);
+	swap(a, 0, last);
+	quicksort(a, last);
+	quicksort(a + last + 1, len - last - 1);
 }
 
 /* Swap a[i] and a[j] */
