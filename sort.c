@@ -40,7 +40,6 @@ void bubble_sort(int *a, int len)
 void heapsort(int *a, int len)
 {
 	build_heap(a, len);
-
 	while (len > 1) {
 		swap(a, 0, len - 1);
 		len--;
@@ -78,7 +77,6 @@ int merge_sort(int *a, int alen)
 
 	if (alen <= 1)
 		return 0;
-
 	blen = alen / 2;
 	clen = alen - blen;
 	if ((b = malloc(sizeof(int) * blen)) == NULL)
@@ -89,15 +87,12 @@ int merge_sort(int *a, int alen)
 	}
 	memcpy(b, a, sizeof(int) * blen);
 	memcpy(c, a + blen, sizeof(int) * clen);
-
 	if (merge_sort(b, blen) == 1 || merge_sort(c, clen) == 1) {
 		free(b);
 		free(c);
 		return 1;
 	}
-
 	merge(a, alen, b, blen, c, clen);
-
 	free(b);
 	free(c);
 

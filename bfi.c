@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -17,15 +16,16 @@ int main(int argc, char **argv)
 	unsigned char cmd[CMD_MAX];	/* Array of commands read from fp */
 	int ci;				/* Index into cmd */
 	int ncmd;			/* Number of commands read */
-	/* If x is the index of a [ command, match[0][x] is the index of the
-	 * matching ] command. Vice versa for match[1][x].
+
+	/*
+	 * If x is the index of a bracket command, match[x] is the index of the
+	 * corresponding bracket command
 	 */
-	int match[2][CMD_MAX];
+	int match[CMD_MAX];
 
 	unsigned char data[DATA_SIZE];	/* Array of data cells */
 	int di;				/* Index into data */
 
-	/* Temporary variables */
 	int stack[CMD_MAX];		/* Stack of indexes of [ commands */
 	int i, j, k, c;
 
@@ -45,23 +45,23 @@ int main(int argc, char **argv)
 			fprintf(stderr, "bfi: too many commands\n");
 			return 1;
 		}
-		if (strchr(valid_cmds, c) != NULL) {
-			if (c == '[')
-				stack[k++] = i;
-			else if (c == ']') {
-				int tmp;
+		if (strchr(valid_cmds, c) == NULL)
+			continue;
+		if (c == '[')
+			stack[k++] = i;
+		else if (c == ']') {
+			int tmp;
 
-				if (k == 0) {
-					fprintf(stderr,
-						"bfi: unmatched closing bracket\n");
-					return 1;
-				}
-				tmp = stack[--k];
-				match[0][tmp] = i;
-				match[1][i] = tmp;
+			if (k == 0) {
+				fprintf(stderr,
+					"bfi: unmatched closing bracket\n");
+				return 1;
 			}
-			cmd[i++] = c;
+			tmp = stack[--k];
+			match[tmp] = i;
+			match[i] = tmp;
 		}
+		cmd[i++] = c;
 	}
 	if (fclose(fp) == EOF) {
 		fprintf(stderr, "bfi: can't close file %s", argv[1]);
@@ -114,14 +114,11 @@ int main(int argc, char **argv)
 			break;
 		case '[':
 			if (data[di] == 0)
-				ci = match[0][ci];
+				ci = match[ci];
 			break;
 		case ']':
 			if (data[di] != 0)
-				ci = match[1][ci];
-			break;
-		default:
-			/* This should never be reached */
+				ci = match[ci];
 			break;
 		}
 	}
