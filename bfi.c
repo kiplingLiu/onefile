@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 		cmd[i++] = c;
 	}
 	if (fclose(fp) == EOF) {
-		fprintf(stderr, "bfi: can't close file %s", argv[1]);
+		fprintf(stderr, "bfi: can't close file %s\n", argv[1]);
 		return 1;
 	}
 	if (k > 0) {
@@ -79,22 +79,22 @@ int main(int argc, char **argv)
 
 	/* Interpret commands */
 	di = 0;
-	for (ci = 0; ci < ncmd; ci++) {
+	for (ci = 0; ci < ncmd; ci++)
 		switch (cmd[ci]) {
 		case '>':
 			di++;
 			if (di >= DATA_SIZE) {
 				fprintf(stderr,
-					"bfi: data pointer out of bounds");
-				return 2;
+					"bfi: data pointer out of bounds\n");
+				return 1;
 			}
 			break;
 		case '<':
 			di--;
 			if (di < 0) {
 				fprintf(stderr,
-					"bfi: data pointer out of bounds");
-				return 2;
+					"bfi: data pointer out of bounds\n");
+				return 1;
 			}
 			break;
 		case '+':
@@ -104,10 +104,7 @@ int main(int argc, char **argv)
 			data[di]--;
 			break;
 		case '.':
-			if (putchar(data[di]) == EOF) {
-				fprintf(stderr, "bfi: can't print character");
-				return 2;
-			}
+			putchar(data[di]);
 			break;
 		case ',':
 			data[di] = getchar();
@@ -121,6 +118,10 @@ int main(int argc, char **argv)
 				ci = match[ci];
 			break;
 		}
+
+	if (ferror(stdout)) {
+		fprintf(stderr, "bfi: error writing stdout\n");
+		return 2;
 	}
 
 	return 0;

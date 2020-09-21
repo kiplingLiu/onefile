@@ -17,5 +17,10 @@ int main(void)
 		printf("\n");
 	}
 
+	if (ferror(stdout)) {
+		fprintf(stderr, "fizzbuzz: error writing stdout\n");
+		return 2;
+	}
+
 	return 0;
 }

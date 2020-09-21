@@ -24,6 +24,11 @@ int main(void)
 		printf("%g\n", 5.0 / 9 * (f - 32));
 	}
 
+	if (ferror(stdout)) {
+		fprintf(stderr, "f2c: error writing stdout\n");
+		return 2;
+	}
+
 	return 0;
 }
 
@@ -49,8 +54,8 @@ char *fgetw(char *word, int len, FILE *fp)
 		if (ungetc(c, fp) == EOF)
 			return NULL;
 	*w = '\0';
-
 	if (len <= 0)
 		return NULL;
+
 	return word;
 }

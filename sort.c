@@ -47,7 +47,7 @@ void heapsort(int *a, int len)
 	}
 }
 
-/* Build a heap from an arbitrarily labelled tree a */
+/* Build a heap from an arbitrarily labeled tree a */
 void build_heap(int *a, int len)
 {
 	for (int v = len / 2 - 1; v >= 0; v--)
@@ -105,7 +105,7 @@ void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 	int i, j, k;
 
 	j = k = 0;
-	for (i = 0; i < alen; i++) {
+	for (i = 0; i < alen; i++)
 		if (j == blen)
 			a[i] = c[k++];
 		else if (k == clen)
@@ -114,7 +114,6 @@ void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 			a[i] = b[j++];
 		else
 			a[i] = c[k++];
-	}
 }
 
 void quicksort(int *a, int len)
