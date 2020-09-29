@@ -2,7 +2,7 @@
 #include <string.h>
 
 enum {
-	CMD_MAX = 50000,	/* Maximum number of commands */
+	CMD_MAX = 30000,	/* Maximum number of commands */
 	DATA_SIZE = 30000	/* Number of available data cells */
 };
 

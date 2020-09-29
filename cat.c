@@ -38,11 +38,13 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-/* Copy ifp to ofp */
+/* Copy ifp to ofp. Errors on ofp are *not* reported. */
 void filecopy(FILE *ifp, FILE *ofp)
 {
 	int c;
 
+	if (ifp == NULL || ofp == NULL)
+		return;
 	while ((c = getc(ifp)) != EOF)
 		putc(c, ofp);
 }

@@ -1,10 +1,11 @@
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
 enum { FALSE, TRUE };
 
-void count_lwc(FILE *fp, int *nlp, int *nwp, int *ncp);
+int count_lwc(FILE *fp, int *nlp, int *nwp, int *ncp);
 void print_lwc(int nl, int nw, int nc, char *fn);
 
 int lf, wf, cf;		/* lf is TRUE if the -l option was specified, etc. */
@@ -49,7 +50,8 @@ int main(int argc, char **argv)
 		lf = wf = cf = TRUE;
 
 	if (i == argc) {
-		count_lwc(stdin, &tl, &tw, &tc);
+		if (count_lwc(stdin, &tl, &tw, &tc) == 1)
+			goto err_count_lwc;
 		print_lwc(tl, tw, tc, "");
 	} else {
 		c = 0;
@@ -58,14 +60,16 @@ int main(int argc, char **argv)
 			FILE *fp;
 			int nl, nw, nc;
 
-			if (strcmp(argv[i], "-") == 0)
-				count_lwc(stdin, &nl, &nw, &nc);
-			else if ((fp = fopen(argv[i], "r")) == NULL) {
+			if (strcmp(argv[i], "-") == 0) {
+				if (count_lwc(stdin, &nl, &nw, &nc) == 1)
+					goto err_count_lwc;
+			} else if ((fp = fopen(argv[i], "r")) == NULL) {
 				fprintf(stderr, "wc: can't open file %s\n",
 					argv[i]);
 				return 1;
 			} else {
-				count_lwc(fp, &nl, &nw, &nc);
+				if (count_lwc(fp, &nl, &nw, &nc) == 1)
+					goto err_count_lwc;
 				if (fclose(fp) == EOF) {
 					fprintf(stderr,
 						"wc: can't close file %s\n",
@@ -74,6 +78,11 @@ int main(int argc, char **argv)
 				}
 			}
 			print_lwc(nl, nw, nc, argv[i]);
+			if (tl > INT_MAX - nl || tw > INT_MAX - nw ||
+			    tc > INT_MAX - nc) {
+				fprintf(stderr, "wc: integer overflow\n");
+				return 1;
+			}
 			tl += nl;
 			tw += nw;
 			tc += nc;
@@ -89,32 +98,50 @@ int main(int argc, char **argv)
 	}
 
 	return 0;
+
+err_count_lwc:
+	fprintf(stderr, "wc: error counting\n");
+	return 1;
 }
 
 /*
  * Count the number of lines, words, and characters in fp; store the results
- * in nlp, nwp, and ncp, respectively
+ * in nlp, nwp, and ncp, respectively. Return 0, or 1 on error.
  */
-void count_lwc(FILE *fp, int *nlp, int *nwp, int *ncp)
+int count_lwc(FILE *fp, int *nlp, int *nwp, int *ncp)
 {
 	int in;
 	int c;
 
+	if (fp == NULL || nlp == NULL || nwp == NULL || ncp == NULL)
+		return 1;
 	*ncp = *nlp = *nwp = 0;
 	in = FALSE;
 	while ((c = getc(fp)) != EOF) {
+		if (*ncp > INT_MAX - 1)	
+			return 1;
 		(*ncp)++;
-		if (c == '\n')
+		if (c == '\n') {
+			if (*nlp > INT_MAX - 1)
+				return 1;
 			(*nlp)++;
+		}
 		if (!isspace(c) && !in) {
+			if (*nwp > INT_MAX - 1)
+				return 1;
 			in = TRUE;
 			(*nwp)++;
 		} else if (isspace(c) && in)
 			in = FALSE;
 	}
+
+	return 0;
 }
 
-/* Print nl, nw, and/or nc depending on lf, wf, and cf, respectively */
+/*
+ * Print nl, nw, and/or nc depending on lf, wf, and cf, respectively. Errors on
+ * stdout are *not* reported.
+ */
 void print_lwc(int nl, int nw, int nc, char *fn)
 {
 	if (lf)
@@ -125,5 +152,6 @@ void print_lwc(int nl, int nw, int nc, char *fn)
 	printf(" ");
 	if (cf)
 		printf("%d", nc);
-	printf("%s%s\n", fn[0] == '\0' ? "" : " ", fn);
+	if (fn != NULL)
+		printf("%s%s\n", fn[0] == '\0' ? "" : " ", fn);
 }

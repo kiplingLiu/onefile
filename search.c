@@ -14,6 +14,8 @@ int sequential_search(int x, int *a, int len)
 {
 	int i;
 
+	if (a == NULL)
+		return -1;
 	for (i = 0; i < len; i++)
 		if (a[i] == x)
 			return i;
@@ -25,6 +27,8 @@ int binary_search(int x, int *a, int len)
 {
 	int low, high, mid;
 
+	if (a == NULL)
+		return -1;
 	low = 0;
 	high = len - 1;
 	while (low <= high) {

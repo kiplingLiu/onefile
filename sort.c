@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum { FALSE, TRUE };
+
 void bubble_sort(int *a, int len);
 
 void heapsort(int *a, int len);
@@ -23,22 +25,26 @@ int main(void)
 void bubble_sort(int *a, int len)
 {
 	int left;	/* Number of elements left to sort */
-	int swapped;	/* 1 if there was a swap */
+	int swapped;	/* TRUE if there was a swap */
 	int i;
 
-	swapped = 1;
+	if (a == NULL)
+		return;
+	swapped = TRUE;
 	for (left = len; left > 1 && swapped; left--) {
-		swapped = 0;
+		swapped = FALSE;
 		for (i = 0; i < left - 1; i++)
 			if (a[i] > a[i + 1]) {
 				swap(a, i, i + 1);
-				swapped = 1;
+				swapped = TRUE;
 			}
 	}
 }
 
 void heapsort(int *a, int len)
 {
+	if (a == NULL)
+		return;
 	build_heap(a, len);
 	while (len > 1) {
 		swap(a, 0, len - 1);
@@ -50,13 +56,19 @@ void heapsort(int *a, int len)
 /* Build a heap from an arbitrarily labeled tree a */
 void build_heap(int *a, int len)
 {
-	for (int v = len / 2 - 1; v >= 0; v--)
+	int v;
+
+	if (a == NULL)
+		return;
+	for (v = len / 2 - 1; v >= 0; v--)
 		down_heap(v, a, len);
 }
 
 /* Make a semi-heap rooted at a[v] into a heap */
 void down_heap(int v, int *a, int len)
 {
+	if (a == NULL)
+		return;
 	while (v <= len / 2 - 1) {
 		int w;	/* Index of child node to swap with node at a[v] */
 
@@ -75,7 +87,7 @@ int merge_sort(int *a, int alen)
 	int *b, *c;
 	int blen, clen;
 
-	if (alen <= 1)
+	if (a == NULL || alen <= 1)
 		return 0;
 	blen = alen / 2;
 	clen = alen - blen;
@@ -104,6 +116,8 @@ void merge(int *a, int alen, int *b, int blen, int *c, int clen)
 {
 	int i, j, k;
 
+	if (a == NULL || b == NULL || c == NULL)
+		return;
 	j = k = 0;
 	for (i = 0; i < alen; i++)
 		if (j == blen)
@@ -120,7 +134,7 @@ void quicksort(int *a, int len)
 {
 	int i, last;
 
-	if (len <= 1)
+	if (a == NULL || len <= 1)
 		return;
 	swap(a, 0, rand() % len);
 	last = 0;
@@ -137,6 +151,8 @@ void swap(int *a, int i, int j)
 {
 	int tmp;
 
+	if (a == NULL)
+		return;
 	tmp = a[i];
 	a[i] = a[j];
 	a[j] = tmp;

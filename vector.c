@@ -1,3 +1,5 @@
+#include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -42,15 +44,19 @@ struct vector *vector_init(void)
 
 /*
  * Add datum to the end of v->data. If there is not enough space, grow v->data
- * by a factor of VGROW. Return the index of datum, or 1 on error.
+ * by a factor of VGROW. Return the index of datum, or -1 on error.
  */
 int vector_add(struct vector *v, void *datum)
 {
 	void *vp;
 
+	if (v == NULL)
+		return -1;
 	if (v->len >= v->max) {
+		if (v->max > INT_MAX / VGROW ||
+		    v->max * VGROW > SIZE_MAX / sizeof(void *))
+			return -1;
 		vp = realloc(v->data, VGROW * v->max * sizeof(void *));
-
 		if (vp == NULL)
 			return -1;
 		v->max *= VGROW;

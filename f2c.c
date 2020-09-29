@@ -18,7 +18,7 @@ int main(void)
 		f = atof(buf);
 		if (errno == ERANGE) {
 			fprintf(stderr,
-				"floating point overflow or underflow\n");
+				"f2c: floating point overflow or underflow\n");
 			return 1;
 		}
 		printf("%g\n", 5.0 / 9 * (f - 32));
@@ -33,14 +33,16 @@ int main(void)
 }
 
 /*
- * Read at most len characters from fp into word; return word, or NULL on end
- * of file or error
+ * Read at most len - 1 continuous non-whitespace characters from fp into word.
+ * Return word, or NULL on end of file or error.
  */
 char *fgetw(char *word, int len, FILE *fp)
 {
 	int c;
 	char *w;
 
+	if (word == NULL || len < 1 || fp == NULL)
+		return NULL;
 	w = word;
 	while (isspace(c = fgetc(fp)))
 		;
