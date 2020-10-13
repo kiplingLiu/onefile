@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
 	int c;		/* Number of operands */
 	int tl, tw, tc;	/* Total line, word, and character counts */
-	
+
 	/* Parse arguments */
 	opt = FALSE;
 	for (i = 1; i < argc && *argv[i] == '-'; i++) {
@@ -118,7 +118,7 @@ int count_lwc(FILE *fp, int *nlp, int *nwp, int *ncp)
 	*ncp = *nlp = *nwp = 0;
 	in = FALSE;
 	while ((c = getc(fp)) != EOF) {
-		if (*ncp > INT_MAX - 1)	
+		if (*ncp > INT_MAX - 1)
 			return 1;
 		(*ncp)++;
 		if (c == '\n') {

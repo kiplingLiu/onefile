@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}
-	
+
 	if (ferror(stdout)) {
 		fprintf(stderr, "cat: error writing stdout\n");
 		return 2;
