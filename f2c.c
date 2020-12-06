@@ -4,7 +4,7 @@
 
 #include "help.h"
 
-#define LEN 10
+enum { LEN = 10 };
 
 /* Convert Fahrenheit to Celsius */
 int main(void)
