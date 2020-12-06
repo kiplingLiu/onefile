@@ -1,11 +1,10 @@
-#include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LEN 10
+#include "help.h"
 
-char *fgetw(char *word, int len, FILE *fp);
+#define LEN 10
 
 /* Convert Fahrenheit to Celsius */
 int main(void)
@@ -30,34 +29,4 @@ int main(void)
 	}
 
 	return 0;
-}
-
-/*
- * Read at most len - 1 continuous non-whitespace characters from fp into word.
- * Return word, or NULL on end of file or error.
- */
-char *fgetw(char *word, int len, FILE *fp)
-{
-	int c;
-	char *w;
-
-	if (word == NULL || len < 1 || fp == NULL)
-		return NULL;
-	w = word;
-	while (isspace(c = fgetc(fp)))
-		;
-	if (c == EOF)
-		return NULL;
-	while (c != EOF && !isspace(c) && --len > 0) {
-		*w++ = c;
-		c = fgetc(fp);
-	}
-	if (c != EOF)
-		if (ungetc(c, fp) == EOF)
-			return NULL;
-	*w = '\0';
-	if (len <= 0)
-		return NULL;
-
-	return word;
 }
