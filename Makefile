@@ -10,6 +10,8 @@ hashtab: hashtab.h
 	$(CC) -DHASHTAB_TEST -o $@ $(CFLAGS) hashtab.c
 help: help.h
 	$(CC) -DHELP_TEST -o $@ $(CFLAGS) help.c
+vector: vector.h
+	$(CC) -DVECTOR_TEST -o $@ $(CFLAGS) vector.c
 clean:
 	rm -f *.o
 	for f in *; do if [ -x "$$f" ]; then rm -f "$$f"; fi; done

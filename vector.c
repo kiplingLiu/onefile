@@ -3,21 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct vector {
-	int len;	/* Current number of values */
-	int max;	/* Allocated number of values */
-	void **data;	/* Array of pointers to void */
-};
+#include "vector.h"
 
 enum { VINIT = 1, VGROW = 2 };
 
-struct vector *vector_init(void);
-int vector_add(struct vector *v, void *datum);
-
+#ifdef VECTOR_TEST
 int main(void)
 {
 	return 0;
 }
+#endif
 
 /*
  * Return a pointer to an empty vector with space allocated for VINIT elements
