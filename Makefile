@@ -6,7 +6,9 @@ CFLAGS = -D_GNU_SOURCE -std=c99 -pedantic -Wall -g -O2
 all:
 f2c: f2c.o help.o help.h
 	$(CC) -o $@ $(CFLAGS) f2c.o help.o
-help: help.c help.h
+hashtab: hashtab.h
+	$(CC) -DHASHTAB_TEST -o $@ $(CFLAGS) hashtab.c
+help: help.h
 	$(CC) -DHELP_TEST -o $@ $(CFLAGS) help.c
 clean:
 	rm -f *.o
