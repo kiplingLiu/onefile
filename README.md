@@ -3,7 +3,6 @@ onefile
 
 A collection of one file programs written in C
 
-
 Installation
 ------------
 
