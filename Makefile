@@ -5,9 +5,6 @@ CFLAGS = -D_GNU_SOURCE -std=c99 -pedantic -Wall -g -O2
 
 all:
 
-f2c: f2c.o help.o help.h
-	$(CC) -o $@ $(CFLAGS) f2c.o help.o
-
 help: help.h
 	$(CC) -DHELP_TEST -o $@ $(CFLAGS) help.c
 vector: vector.h
